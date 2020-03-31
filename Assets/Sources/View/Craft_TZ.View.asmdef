@@ -1,0 +1,16 @@
+{
+    "name": "Craft_TZ.View",
+    "references": [
+        "Craft_TZ.Shared",
+        "Craft_TZ.Model"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
