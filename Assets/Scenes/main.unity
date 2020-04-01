@@ -243,6 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrototype: {fileID: 14448947}
+  difficultyLevel: 2
   T1: 0
   T2: 0
 --- !u!4 &176905223

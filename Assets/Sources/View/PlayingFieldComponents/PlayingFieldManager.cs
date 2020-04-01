@@ -15,21 +15,16 @@ namespace Craft_TZ.View
 
         private ITilePositionGenerator tileGenerator;
 
+        public DifficultyLevel difficultyLevel;
+
         private void Start()
         {
-            tileGenerator = new SquareTilePositionGenerator();
+            tileGenerator = new SquareTilePositionGenerator(1, difficultyLevel);
             pool = new ObjectPool<Tile>(() => tilePrototype.Clone(false), 10);
 
 
-            List<Vector2> tilePositions = tileGenerator.GenerateLaunchPadPositions();
-
-            foreach (var itemPosition in tilePositions)
-            {
-                //получить из пула тайл, поставить его в нужную позицию, и включить
-                var tileInstance = pool.GetObject();
-                tileInstance.Setup(itemPosition);
-                tileInstance.Show();
-            }
+            var tilesPositions = tileGenerator.GenerateLaunchPadPositions();
+            GenerateTilesInPositions(tilesPositions);
         }
 
         /// <summary>
@@ -37,14 +32,30 @@ namespace Craft_TZ.View
         /// </summary>
         private void HandleTileGeneration()
         {
-            List<Vector2> tilePositions = tileGenerator.GenerateTilePositoins();
+            var tilesPositions = tileGenerator.GenerateTilePositoins();
 
+            /*
             foreach (var itemPosition in tilePositions)
             {
                 //получить из пула тайл, поставить его в нужную позицию, и включить
                 var tileInstance = pool.GetObject();
                 tileInstance.Setup(itemPosition);
                 tileInstance.Show();
+            }
+            */
+            GenerateTilesInPositions(tilesPositions);
+        }
+
+        private void GenerateTilesInPositions(Vector2[,] positions)
+        {
+            for (int y = 0; y <= positions.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x <= positions.GetUpperBound(0); x++)
+                {
+                    var tileInstance = pool.GetObject();
+                    tileInstance.Setup(positions[x,y]);
+                    tileInstance.Show();
+                }
             }
         }
 
