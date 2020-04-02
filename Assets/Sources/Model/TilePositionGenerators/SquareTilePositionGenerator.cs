@@ -44,21 +44,23 @@ namespace Craft_TZ.Model.SquareTile
             }
         }
 
-        public Vector2[,] GenerateLaunchPadPositions()
+        public IReadOnlyCollection<Vector2> GenerateLaunchPadPositions()
         {
-            Vector2[,] result = new Vector2[launchPadSize.x, launchPadSize.y];
-
+            Vector2[,] generatedTilePositions = new Vector2[launchPadSize.x, launchPadSize.y];
+            List<Vector2> result = new List<Vector2>();
             for (int y = 0; y < launchPadSize.y; y++)
             {
                 for (int x = 0; x < launchPadSize.x; x++)
                 {
-                    result[x, y] = new Vector2(x * tileSize, y * tileSize);
+                    generatedTilePositions[x, y] = new Vector2(x * tileSize, y * tileSize);
+                    result.Add(generatedTilePositions[x, y]);
                 }
             }
 
-            Vector2[,] generatedPositionsAccordingToDifficultyLevel = ConvertCoordinatesAccordingDifficultyLevel(result, difficultyLevel);
+            Vector2[,] generatedPositionsAccordingToDifficultyLevel = ConvertCoordinatesAccordingDifficultyLevel(generatedTilePositions, difficultyLevel);
             extremeCellPositions = tilePositionGenerator.GenerateExtremeCellPositions(generatedPositionsAccordingToDifficultyLevel);
-            return result;
+
+            return result.AsReadOnly();
         }
 
         private Vector2[,] ConvertCoordinatesAccordingDifficultyLevel(Vector2[,] originalCoordinates, DifficultyLevel targetCoordinatesDifficultyLevel)
@@ -118,12 +120,22 @@ namespace Craft_TZ.Model.SquareTile
             }
         }
 
-        public Vector2[,] GenerateTilePositoins()
+        public IReadOnlyCollection<Vector2> GeneratePositoins()
         {
-            var extremeFace = (FaceDirections)UnityEngine.Random.Range(0, 2);
-            var generatedTilePositions = tilePositionGenerator.GenerateTilePositoins(extremeFace, extremeCellPositions);
+            FaceDirections extremeFace = (FaceDirections)UnityEngine.Random.Range(0, 2);
+            Vector2[,] generatedTilePositions = tilePositionGenerator.GenerateTilePositoins(extremeFace, extremeCellPositions);
             extremeCellPositions = tilePositionGenerator.GenerateExtremeCellPositions(generatedTilePositions);
-            return generatedTilePositions;
+
+            List<Vector2> result = new List<Vector2>();
+            for (int y = 0; y <= generatedTilePositions.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x <= generatedTilePositions.GetUpperBound(0); x++)
+                {
+                    result.Add(generatedTilePositions[x, y]);
+                }
+            }
+
+            return result.AsReadOnly();
         }
     }
 }

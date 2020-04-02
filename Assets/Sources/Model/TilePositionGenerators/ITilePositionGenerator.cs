@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Craft_TZ.Model
 {
     public interface ITilePositionGenerator
     {
-        Vector2[,] GenerateLaunchPadPositions();
-        Vector2[,] GenerateTilePositoins();
+        IReadOnlyCollection<Vector2> GenerateLaunchPadPositions();
+        IReadOnlyCollection<Vector2> GeneratePositoins();
     }
 }

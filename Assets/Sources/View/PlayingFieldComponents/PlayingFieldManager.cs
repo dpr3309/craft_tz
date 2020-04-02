@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Craft_TZ.Model;
+using Craft_TZ.Model.Crystal;
 using Craft_TZ.Model.SquareTile;
 using Craft_TZ.Shared;
 using UnityEngine;
@@ -10,67 +12,84 @@ namespace Craft_TZ.View
     {
         [SerializeField]
         private Tile tilePrototype;
+        [SerializeField]
+        private Crystal crystalPrototype;
 
-        private ObjectPool<Tile> pool;
+        private ObjectPool<Tile> poolOfTiles;
+        private ObjectPool<Crystal> poolOfCrystals;
 
-        private ITilePositionGenerator tileGenerator;
+        private ITilePositionGenerator positionGenerator;
+        private ICrystalPositionGenerator crystalPositionGenerator;
 
         public DifficultyLevel difficultyLevel;
 
+
         private void Start()
         {
-            tileGenerator = new SquareTilePositionGenerator(1, difficultyLevel);
-            pool = new ObjectPool<Tile>(() => tilePrototype.Clone(false), 10);
+            positionGenerator = new SquareTilePositionGenerator(1, difficultyLevel);
+            crystalPositionGenerator = new RandomCrystalPositionGenerator();
+
+            poolOfTiles = new ObjectPool<Tile>(() => tilePrototype.Clone(false), 100);
+            poolOfCrystals = new ObjectPool<Crystal>(() => crystalPrototype.Clone(false), 10);
 
 
-            var tilesPositions = tileGenerator.GenerateLaunchPadPositions();
+            var tilesPositions = positionGenerator.GenerateLaunchPadPositions().ToList().AsReadOnly();
             GenerateTilesInPositions(tilesPositions);
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                HandleStepGeneration();
+            }
+
         }
 
         /// <summary>
         /// Handles the tile generation.
         /// </summary>
-        private void HandleTileGeneration()
+        private void HandleStepGeneration()
         {
-            var tilesPositions = tileGenerator.GenerateTilePositoins();
+            // получаем новые позициигенерации
+            var positions = positionGenerator.GeneratePositoins();
 
-            /*
-            foreach (var itemPosition in tilePositions)
+            // генерируем в этих позициях тайлы
+            GenerateTilesInPositions(positions);
+            //делаем выборку позиций генерации кристалов
+            var crystalGeneratePositions = crystalPositionGenerator.GenerateCrystalPositions(positions);
+            // в полученных позициях генерируем кристалы
+            GenerateCrystalsInPositions(crystalGeneratePositions);
+        }
+
+        private void GenerateCrystalsInPositions(IEnumerable<Vector2> positions)
+        {
+            foreach (var item in positions)
             {
-                //получить из пула тайл, поставить его в нужную позицию, и включить
-                var tileInstance = pool.GetObject();
-                tileInstance.Setup(itemPosition);
+                var crystalInstance = poolOfCrystals.GetObject();
+                crystalInstance.Setup(item);
+                crystalInstance.Show();
+            }
+        }
+
+        private void GenerateTilesInPositions(IEnumerable<Vector2> positions)
+        {
+            foreach (var item in positions)
+            {
+                var tileInstance = poolOfTiles.GetObject();
+                tileInstance.Setup(item);
                 tileInstance.Show();
             }
-            */
-            GenerateTilesInPositions(tilesPositions);
-        }
-
-        private void GenerateTilesInPositions(Vector2[,] positions)
-        {
-            for (int y = 0; y <= positions.GetUpperBound(1); y++)
-            {
-                for (int x = 0; x <= positions.GetUpperBound(0); x++)
-                {
-                    var tileInstance = pool.GetObject();
-                    tileInstance.Setup(positions[x,y]);
-                    tileInstance.Show();
-                }
-            }
         }
 
 
-        public bool T1, T2;
+        public bool T1, T2, T3;
         private void Update()
         {
             if (T1)
             {
                 T1 = !T1;
-                HandleTileGeneration();
+                HandleStepGeneration();
                 return;
             }
-
         }
-
     }
 }
