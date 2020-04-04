@@ -5,7 +5,7 @@ namespace Craft_TZ.Model.CoordinateHandlers
 {
     public interface IMainCoordinateProcessor
     {
-        bool CoordinatesAreWithinTiles(Vector2 coordinate, IReadOnlyCollection<Vector2> tilesCoordinates);
+        bool CoordinatesAreWithinTiles(Vector2 coordinate, IEnumerable<Vector2> tilesCoordinates);
         bool PlayerChipCollisionWithOtherObject(Vector2 playerChipCoordinate, Vector2 otherObjectCoordinate);
     }
 
@@ -14,13 +14,13 @@ namespace Craft_TZ.Model.CoordinateHandlers
         private readonly IFigureCoordinateProcessor tileCoordinateProcessor;
         private readonly IFigureCoordinateProcessor playerChipCoordinateProcessor;
 
-        public MainCoordinateProcessor(IFigureCoordinateProcessor tileCoordinateProcessor, IFigureCoordinateProcessor playerChipCoordinateProcessor)
+        public MainCoordinateProcessor(IPlayerChipCoordinateProcessor playerChipCoordinateProcessor, ITileCoordinateProcessor tileCoordinateProcessor)
         {
             this.tileCoordinateProcessor = tileCoordinateProcessor;
             this.playerChipCoordinateProcessor = playerChipCoordinateProcessor;
         }
 
-        public bool CoordinatesAreWithinTiles(Vector2 otherCoordinate, IReadOnlyCollection<Vector2> tilesCoordinates)
+        public bool CoordinatesAreWithinTiles(Vector2 otherCoordinate, IEnumerable<Vector2> tilesCoordinates)
         {
             foreach (var tileCenterCoordinate in tilesCoordinates)
             {

@@ -1,7 +1,8 @@
 {
     "name": "Craft_TZ.Model",
     "references": [
-        "Craft_TZ.Shared"
+        "Craft_TZ.Shared",
+        "Zenject"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

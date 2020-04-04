@@ -2,7 +2,7 @@
 {
     internal enum FaceDirections
     {
-        Top, //top face
-        Right    //right face
+        Top,    //top face
+        Right   //right face
     }
 }

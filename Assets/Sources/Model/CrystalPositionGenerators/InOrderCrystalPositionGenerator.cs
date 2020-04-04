@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Craft_TZ.Model.Crystal
 {
-    public sealed class InOrderCrystalPositionGenerator : ICrystalPositionGenerator
+    internal sealed class InOrderCrystalPositionGenerator : ICrystalPositionGenerator
     {
         private InOrderItemSelector selector;
 

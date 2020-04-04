@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Craft_TZ.Model.CoordinateHandlers
 {
-    internal sealed class PlayerBallCoordinateProcessor : IFigureCoordinateProcessor
+    internal sealed class PlayerBallCoordinateProcessor : IPlayerChipCoordinateProcessor
     {
         private readonly float radius;
 

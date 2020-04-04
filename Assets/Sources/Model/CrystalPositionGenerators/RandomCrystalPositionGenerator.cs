@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Craft_TZ.Model.Crystal
 {
-    public sealed class RandomCrystalPositionGenerator : ICrystalPositionGenerator
+    internal sealed class RandomCrystalPositionGenerator : ICrystalPositionGenerator
     {
         private RandomItemSelector selector;
 

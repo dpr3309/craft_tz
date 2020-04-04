@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Craft_TZ.Model.SquareTile
 {
-    public class SquareTilePositionGenerator : ITilePositionGenerator
+    internal class SquareTilePositionGenerator : ITilePositionGenerator
     {
         private Dictionary<FaceDirections, Vector2[]> extremeCellPositions;
 

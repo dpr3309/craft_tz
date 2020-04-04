@@ -72,6 +72,5 @@ namespace Craft_TZ.Model.SquareTile
             }
             return result;
         }
-
     }
 }

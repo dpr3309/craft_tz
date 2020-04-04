@@ -6,4 +6,12 @@ namespace Craft_TZ.Model.CoordinateHandlers
     {
         bool ContainsCoordinates(Vector2 coordinatesCenterOfFigure, Vector2 otherCoordinates);
     }
+
+    public interface IPlayerChipCoordinateProcessor : IFigureCoordinateProcessor
+    {
+    }
+
+    public interface ITileCoordinateProcessor : IFigureCoordinateProcessor
+    {
+    }
 }

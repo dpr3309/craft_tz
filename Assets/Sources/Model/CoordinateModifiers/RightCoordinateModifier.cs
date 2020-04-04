@@ -2,7 +2,7 @@
 
 namespace Craft_TZ.Model.CoordinateModifiers
 {
-    internal class RightCoordinateModifier : ICoordinateModifier
+    public class RightCoordinateModifier : ICoordinateModifier
     {
         public Vector3 TransformCoordinates(Vector3 coordinate, float modifier)
         {

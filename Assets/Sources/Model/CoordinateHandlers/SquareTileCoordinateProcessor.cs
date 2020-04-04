@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Craft_TZ.Model.CoordinateHandlers
 {
-    internal sealed class SquareTileCoordinateProcessor : IFigureCoordinateProcessor
+    internal sealed class SquareTileCoordinateProcessor : ITileCoordinateProcessor
     {
         private readonly int tileSize;
         private readonly float halfTileSize;
@@ -21,5 +21,4 @@ namespace Craft_TZ.Model.CoordinateHandlers
             return GeometricCalculator.SquareContainsPoint(coordinatesCenterOfFigure, otherCoordinates, halfTileSize, tileArea);
         }
     }
-
 }

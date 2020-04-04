@@ -2,7 +2,8 @@
     "name": "Craft_TZ.View",
     "references": [
         "Craft_TZ.Shared",
-        "Craft_TZ.Model"
+        "Craft_TZ.Model",
+        "Zenject"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
