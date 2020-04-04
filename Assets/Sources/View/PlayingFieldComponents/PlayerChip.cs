@@ -1,6 +1,6 @@
-﻿using Craft_TZ.Model.CoordinateHandlers;
-using Craft_TZ.Model.CoordinateModifiers;
+﻿using Craft_TZ.Model.CoordinateModifiers;
 using UnityEngine;
+using Zenject;
 
 namespace Craft_TZ.View
 {
@@ -9,34 +9,33 @@ namespace Craft_TZ.View
         [SerializeField]
         private float speed;
 
-        private ICoordinateModifier coordinateModifier;
-        private ICoordinateModifier[] modifiers;
-
-        //private IGameLoopManager gameLoopManager;
         [SerializeField]
         private PlayingFieldManager gameLoopManager;
 
-        private void Start()
+        private bool isConstructed = false;
+
+        private ICoordinateModifierManager coordinateModifierManager;
+
+        [Inject]
+        private void Construct(ICoordinateModifierManager coordinateModifierManager)
         {
-            modifiers = new ICoordinateModifier[2];
-            modifiers[0] = new ForwardCoordinateModifier();
-            modifiers[1] = new RightCoordinateModifier();
-            index = 0;
-            coordinateModifier = modifiers[index];
+            if (isConstructed)
+                throw new System.Exception($"[{GetType().Name}.Construct] object already constructed");
+
+            this.coordinateModifierManager = coordinateModifierManager;
+
+            isConstructed = true;
         }
 
-        private int index = 0;
         private void Update()
         {
-            transform.position = coordinateModifier.TransformCoordinates(transform.position, speed);
+            transform.position = coordinateModifierManager.TransformCoordinates(transform.position, speed);
             gameLoopManager.Step(new Vector2(transform.position.x, transform.position.z));
 
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                index = index == 0 ? 1 : 0;
-                coordinateModifier = modifiers[index];
+                coordinateModifierManager.ChengeCoordinateModifier();
             }
         }
-
     }
 }

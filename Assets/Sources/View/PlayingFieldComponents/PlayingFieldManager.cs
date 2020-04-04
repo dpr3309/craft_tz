@@ -30,13 +30,20 @@ namespace Craft_TZ.View
         private ICrystalPositionGenerator crystalPositionGenerator;
         public DifficultyLevel difficultyLevel;
 
+        private bool isConstructed = false;
+
         [Inject]
         private void Construct(ICrystalPositionGenerator crystalPositionGenerator, ITilePositionGenerator positionGenerator, IMainCoordinateProcessor mainCoordinateProcessor)
         {
+            if (isConstructed)
+                throw new System.Exception($"[{GetType().Name}.Construct] object already constructed");
+
             Debug.Log("PlayingFieldManager.Construct");
             this.crystalPositionGenerator = crystalPositionGenerator;
             this.mainCoordinateProcessor = mainCoordinateProcessor;
             this.positionGenerator = positionGenerator;
+
+            isConstructed = true;
         }
 
 

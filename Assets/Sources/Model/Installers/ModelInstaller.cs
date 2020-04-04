@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Craft_TZ.Model.CoordinateHandlers;
+using Craft_TZ.Model.CoordinateModifiers;
 using Craft_TZ.Model.Crystal;
 using Craft_TZ.Model.SquareTile;
 using Craft_TZ.Shared;
@@ -35,6 +38,36 @@ namespace Craft_TZ.Model.Installers
 
             Container.BindInterfacesAndSelfTo<MainCoordinateProcessor>().AsSingle();
 
+            InstallCoordinateModifierManager(settings.coordinateModifierTypes);
+
+        }
+
+        private void InstallCoordinateModifierManager(List<CoordinateModifierTypes> coordinateModifierTypes)
+        {
+            if(coordinateModifierTypes.Count ==0)
+                throw new Exception("[ModelInstaller.InstallCoordinateModifierManager] settings.coordinateModifierTypes.Count ==0");
+
+            //проверка на наличие повторяющихся элементов в коллекци
+            if (coordinateModifierTypes.GroupBy(i => i).Any(i => i.Count() > 1))
+                throw new Exception("[ModelInstaller.InstallCoordinateModifierManager] settings.coordinateModifierTypes contains duplicate items");
+
+            List<ICoordinateModifier> coordinateModifiers = new List<ICoordinateModifier>();
+            foreach (var coordinateModifierType in coordinateModifierTypes)
+            {
+                switch (coordinateModifierType)
+                {
+                    case CoordinateModifierTypes.Forward:
+                        coordinateModifiers.Add(new ForwardCoordinateModifier());
+                        break;
+                    case CoordinateModifierTypes.Right:
+                        coordinateModifiers.Add(new RightCoordinateModifier());
+                        break;
+                    default:
+                        throw new Exception($"[ModelInstaller.InstallCoordinateModifierManager] unhandled coordinateModifierType : {coordinateModifierType}");
+                }
+            }
+
+            Container.BindInterfacesTo<MainCoordinateModifierManager>().AsSingle().WithArguments(coordinateModifiers.ToArray());
         }
 
         private void InstallPlayerChipCoordinateProcessor(PlayerChipType playerChipType, int playerChipRadius)
@@ -100,6 +133,7 @@ namespace Craft_TZ.Model.Installers
         public int tileSize;
         public int playerChipRadius;
         public DifficultyLevel difficaltyLevel;
+        public List<CoordinateModifierTypes> coordinateModifierTypes;
     }
 
     public enum TileType
@@ -116,5 +150,12 @@ namespace Craft_TZ.Model.Installers
     {
         Random,
         InOrder
+    }
+
+    public enum CoordinateModifierTypes
+    {
+        Forward,
+        Right,
+        Left
     }
 }
