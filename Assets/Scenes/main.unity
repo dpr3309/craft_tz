@@ -385,7 +385,8 @@ MonoBehaviour:
     crystalPositionGeneratorType: 0
     tileSize: 1
     playerChipRadius: 1
-    difficaltyLevel: 0
+    difficaltyLevel: 2
+    coordinateModifierTypes: 0000000001000000
 --- !u!114 &1778892520
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,7 +26,7 @@ namespace Craft_TZ.Model.Installers
 
             // 1 - с учетом выбранного типа тайлов, инстанцировать прототип тайла
             // 2 с учетом типа тайлов, и с учетом размера инстанцированного тала, инстанцировать генератор позиций тайлов
-            InstallTilePositionGenerator(settings.tileType, settings.tileSize, settings.difficaltyLevel);
+            InstallTilePositionGenerator(settings.tileType, settings.tileSize, settings.difficaltyLevel, settings.launchPadSize);
             // 3 с учетом типа тайла и его размеров, инстанцировать процессор координат тайлов (для проверки, находится ли фишки игрока, в пределах инстанированных тайлов, или нет)
             InstallTileCoordinateProcessor(settings.tileType, settings.tileSize);
 
@@ -94,12 +94,18 @@ namespace Craft_TZ.Model.Installers
             }
         }
 
-        private void InstallTilePositionGenerator(TileType tileType, int tileSize, DifficultyLevel difficultyLevel)
+        private void InstallTilePositionGenerator(TileType tileType, int tileSize, DifficultyLevel difficultyLevel, Vector2Int launchPadSize)
         {
+            if (tileSize <= 0)
+                throw new Exception($"[ModelInstaller.InstallTilePositionGenerator] tile size <= 0");
+
+            if(launchPadSize.x <=0 || launchPadSize.y <=0)
+                throw new Exception($"[ModelInstaller.InstallTilePositionGenerator] incorrect launch pad dimensions");
+
             switch (tileType)
             {
                 case TileType.Square:
-                    Container.BindInterfacesTo<SquareTilePositionGenerator>().AsSingle().WithArguments(tileSize, difficultyLevel);
+                    Container.BindInterfacesTo<SquareTilePositionGenerator>().AsSingle().WithArguments(tileSize, difficultyLevel, launchPadSize);
                     break;
                 default:
                     throw new Exception($"[ModelInstaller.InstallTilePositionGenerator] unhandled TileType : {tileType}");
@@ -125,6 +131,7 @@ namespace Craft_TZ.Model.Installers
     [System.Serializable]
     public class GameSettings
     {
+        public Vector2Int launchPadSize;
         public PlayerChipType playerChipType;
         public float playerChipSpeed;
         public TileType tileType;

@@ -9,16 +9,16 @@ namespace Craft_TZ.Model.SquareTile
     {
         private Dictionary<FaceDirections, Vector2[]> extremeCellPositions;
 
-        private readonly Vector2Int launchPadSize = new Vector2Int(3, 3);
-
+        private readonly Vector2Int launchPadSize;
         private readonly DifficultyLevel difficultyLevel;
         private readonly int tileSize;
         private readonly ALevelSquareTilePositionGenerator tilePositionGenerator;
 
-        public SquareTilePositionGenerator(int tileSize, DifficultyLevel difficultyLevel)
+        public SquareTilePositionGenerator(int tileSize, DifficultyLevel difficultyLevel, Vector2Int launchPadSize)
         {
             this.difficultyLevel = difficultyLevel;
             this.tileSize = tileSize;
+            this.launchPadSize = launchPadSize;
 
             tilePositionGenerator = GenerateTilePositionGenerator(difficultyLevel, tileSize);
         }
