@@ -6,6 +6,7 @@ using Craft_TZ.Model.Crystal;
 using Craft_TZ.Shared;
 using Craft_TZ.Shared.Calculations;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Craft_TZ.View
@@ -13,9 +14,11 @@ namespace Craft_TZ.View
     internal class PlayingFieldManager : MonoBehaviour
     {
         [SerializeField]
-        private Tile tilePrototype;
+        private Tile tilePrototype = null;
         [SerializeField]
-        private Crystal crystalPrototype;
+        private Crystal crystalPrototype = null;
+        [SerializeField]
+        private Text countText = null;
 
         private int counter;
 
@@ -57,7 +60,7 @@ namespace Craft_TZ.View
             GenerateTilesInPositions(tilesPositions);
 
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 HandleStepGeneration();
             }
@@ -119,6 +122,7 @@ namespace Craft_TZ.View
                         // механика подбора кристала
                         // увеличить счетчик очков, переместить кристал в коллекцию на удаление
                         counter++;
+                        countText.text = counter.ToString();
                         toRemove.Add(crystalInstance);
                     }
                 }
