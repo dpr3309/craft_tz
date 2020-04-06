@@ -20,8 +20,8 @@ namespace Craft_TZ.View
 
         private int counter;
 
-        private List<Tile> tileInstances = new List<Tile>();
-        private List<Crystal> crystalInstances = new List<Crystal>();
+        private List<AbstractTile> tileInstances = new List<AbstractTile>();
+        private List<AbstractCrystal> crystalInstances = new List<AbstractCrystal>();
 
         private IMainCoordinateProcessor mainCoordinateProcessor;
         private ITilePositionGenerator positionGenerator;
@@ -131,7 +131,7 @@ namespace Craft_TZ.View
             //todo: проверить, стоит ли фишка чувака на полу
             if (mainCoordinateProcessor.CoordinatesAreWithinTiles(playerChipCoordinates, tileInstances.Select(i => i.Position)))
             {
-                List<Crystal> toRemove = new List<Crystal>();
+                List<AbstractCrystal> toRemove = new List<AbstractCrystal>();
 
                 // если да: 
                 // потом, проверить коллизию с кристалами

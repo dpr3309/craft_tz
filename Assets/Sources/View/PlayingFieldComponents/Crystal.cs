@@ -2,25 +2,24 @@
 
 namespace Craft_TZ.View
 {
-    internal class Crystal : MonoBehaviour
+    internal sealed class Crystal : AbstractCrystal
     {
-        public Vector2 Position { get; private set; }
+        public  override Vector2 Position { get; protected set; }
 
-        internal void Setup(Vector2 position)
+        internal override void Setup(Vector2 position)
         {
-            this.transform.position = new Vector3(position.x, 1.5f, position.y);
+            transform.position = new Vector3(position.x, 1.5f, position.y);
             Position = position;
         }
 
-        internal void Show()
+        internal override void Show()
         {
-            this.gameObject.SetActive(true);
+            gameObject.SetActive(true);
         }
 
-        internal void Hide()
+        internal override void Hide()
         {
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
-
 }

@@ -16,8 +16,8 @@ namespace Craft_TZ.View.Installers
         {
             InstallGameCoreFSM();
 
-            Container.BindInterfacesAndSelfTo<Tile>().FromComponentInNewPrefab(tilePrototype).AsSingle();
-            Container.BindInterfacesAndSelfTo<Crystal>().FromComponentInNewPrefab(crystalPrototype).AsSingle();
+            Container.BindInterfacesAndSelfTo<AbstractTile>().FromComponentInNewPrefab(tilePrototype).AsSingle();
+            Container.BindInterfacesAndSelfTo<AbstractCrystal>().FromComponentInNewPrefab(crystalPrototype).AsSingle();
 
             //Container.BindInterfacesAndSelfTo<PoolOfCrystals>().AsSingle();
             //Container.BindInterfacesAndSelfTo<PoolOfTiles>().AsSingle();
