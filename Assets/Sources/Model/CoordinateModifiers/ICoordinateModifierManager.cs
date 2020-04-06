@@ -6,5 +6,6 @@ namespace Craft_TZ.Model.CoordinateModifiers
     {
         void ChengeCoordinateModifier();
         Vector3 TransformCoordinates(Vector3 coordinate, float modifier);
+        void ResetCoordinateModifier();
     }
 }

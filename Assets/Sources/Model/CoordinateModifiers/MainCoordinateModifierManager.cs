@@ -24,6 +24,12 @@ namespace Craft_TZ.Model.CoordinateModifiers
             currentCoordinateModifier = coordinateModifiers[index];
         }
 
+        public void ResetCoordinateModifier()
+        {
+            index = 0;
+            currentCoordinateModifier = coordinateModifiers[index];
+        }
+
         public Vector3 TransformCoordinates(Vector3 coordinate, float modifier)
         {
             return currentCoordinateModifier.TransformCoordinates(coordinate, modifier);

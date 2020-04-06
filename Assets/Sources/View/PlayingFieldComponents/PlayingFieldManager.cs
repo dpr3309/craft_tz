@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Craft_TZ.GameCore.FSM;
 using Craft_TZ.Model;
 using Craft_TZ.Model.CoordinateHandlers;
 using Craft_TZ.Model.Crystal;
@@ -11,7 +12,7 @@ using Zenject;
 
 namespace Craft_TZ.View
 {
-    internal class PlayingFieldManager : MonoBehaviour
+    internal class PlayingFieldManager : MonoBehaviour, IGameCore
     {
         [SerializeField]
         private Tile tilePrototype = null;
@@ -31,12 +32,14 @@ namespace Craft_TZ.View
         private IMainCoordinateProcessor mainCoordinateProcessor;
         private ITilePositionGenerator positionGenerator;
         private ICrystalPositionGenerator crystalPositionGenerator;
+        private IGameCoreStateMachine gameCoreStateMachine;
+
         public DifficultyLevel difficultyLevel;
 
         private bool isConstructed = false;
 
         [Inject]
-        private void Construct(ICrystalPositionGenerator crystalPositionGenerator, ITilePositionGenerator positionGenerator, IMainCoordinateProcessor mainCoordinateProcessor)
+        private void Construct(ICrystalPositionGenerator crystalPositionGenerator, ITilePositionGenerator positionGenerator, IMainCoordinateProcessor mainCoordinateProcessor, IGameCoreStateMachine gameCoreStateMachine)
         {
             if (isConstructed)
                 throw new System.Exception($"[{GetType().Name}.Construct] object already constructed");
@@ -45,17 +48,19 @@ namespace Craft_TZ.View
             this.crystalPositionGenerator = crystalPositionGenerator;
             this.mainCoordinateProcessor = mainCoordinateProcessor;
             this.positionGenerator = positionGenerator;
-
+            this.gameCoreStateMachine = gameCoreStateMachine;
             isConstructed = true;
         }
-
 
         private void Start()
         {
             poolOfTiles = new ObjectPool<Tile>(() => tilePrototype.Clone(false), 100);
             poolOfCrystals = new ObjectPool<Crystal>(() => crystalPrototype.Clone(false), 10);
+            gameCoreStateMachine.Event(GameCoreEvents.Startup);
+        }
 
-
+        public void Startup()
+        {
             var tilesPositions = positionGenerator.GenerateLaunchPadPositions().ToList().AsReadOnly();
             GenerateTilesInPositions(tilesPositions);
 
@@ -104,7 +109,26 @@ namespace Craft_TZ.View
             }
         }
 
+        public void Release()
+        {
+            foreach (var crystal in crystalInstances)
+            {
+                crystal.gameObject.SetActive(false);
+                poolOfCrystals.PutObject(crystal);
+            }
+            crystalInstances.Clear();
 
+            foreach (var tile in tileInstances)
+            {
+                tile.gameObject.SetActive(false);
+                poolOfTiles.PutObject(tile);
+            }
+            tileInstances.Clear();
+
+            counter = 0;
+            countText.text = counter.ToString();
+            gameCoreStateMachine.Event(GameCoreEvents.Restart);
+        }
 
         public void Step(Vector2 playerChipCoordinates)
         {
@@ -140,6 +164,8 @@ namespace Craft_TZ.View
             {
                 //todo: фишка игрока должна упасть, перевести игру с состояние конец игры
                 Debug.LogWarning("ПАДАЕМ!!!!!");
+
+                gameCoreStateMachine.Event(GameCoreEvents.EndOfGame);
             }
         }
 
@@ -149,6 +175,11 @@ namespace Craft_TZ.View
         public bool T1, T2, T3;
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                gameCoreStateMachine.Event(GameCoreEvents.Click);
+            }
+
             if (T1)
             {
                 T1 = !T1;
@@ -161,5 +192,9 @@ namespace Craft_TZ.View
                 Debug.Log(GeometricCalculator.CircleContainsPoint(center, other, radius));
             }
         }
+
+        
+
+        
     }
 }

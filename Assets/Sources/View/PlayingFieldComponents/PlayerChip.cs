@@ -1,41 +1,69 @@
-﻿using Craft_TZ.Model.CoordinateModifiers;
+﻿using System;
+using Craft_TZ.Model.CoordinateModifiers;
 using UnityEngine;
 using Zenject;
 
 namespace Craft_TZ.View
 {
-    internal class PlayerChip : MonoBehaviour
+    internal class PlayerChip : MonoBehaviour, IPlayerChip
     {
         [SerializeField]
         private float speed;
 
-        [SerializeField]
         private PlayingFieldManager gameLoopManager;
 
         private bool isConstructed = false;
 
+        private Vector3 startPosition;
+
         private ICoordinateModifierManager coordinateModifierManager;
 
+        private Action moveAction;
+
         [Inject]
-        private void Construct(ICoordinateModifierManager coordinateModifierManager)
+        private void Construct(ICoordinateModifierManager coordinateModifierManager, PlayingFieldManager gameLoopManager)
         {
             if (isConstructed)
-                throw new System.Exception($"[{GetType().Name}.Construct] object already constructed");
+                throw new Exception($"[{GetType().Name}.Construct] object already constructed");
 
             this.coordinateModifierManager = coordinateModifierManager;
-
+            this.gameLoopManager = gameLoopManager;
             isConstructed = true;
+        }
+
+        private void Start()
+        {
+            startPosition = this.transform.position;
         }
 
         private void Update()
         {
-            transform.position = coordinateModifierManager.TransformCoordinates(transform.position, speed);
-            gameLoopManager.Step(new Vector2(transform.position.x, transform.position.z));
+            moveAction?.Invoke();
+        }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+        public void StartMove()
+        {
+            moveAction = () =>
             {
-                coordinateModifierManager.ChengeCoordinateModifier();
-            }
+                transform.position = coordinateModifierManager.TransformCoordinates(transform.position, speed);
+                gameLoopManager.Step(new Vector2(transform.position.x, transform.position.z));
+            };
+        }
+
+        public void StopMove()
+        {
+            moveAction = null;
+        }
+
+        public void ChangeDirection()
+        {
+            coordinateModifierManager.ChengeCoordinateModifier();
+        }
+
+        public void Restart()
+        {
+            transform.position = startPosition;
+            coordinateModifierManager.ResetCoordinateModifier();
         }
     }
 }
