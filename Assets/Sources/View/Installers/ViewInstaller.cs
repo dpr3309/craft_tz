@@ -1,13 +1,27 @@
 using Craft_TZ.GameCore.FSM;
+using UnityEngine;
 using Zenject;
 
 namespace Craft_TZ.View.Installers
 {
     public class ViewInstaller : MonoInstaller
     {
+        [SerializeField]
+        private Tile tilePrototype = null;
+
+        [SerializeField]
+        private Crystal crystalPrototype = null;
+
         public override void InstallBindings()
         {
             InstallGameCoreFSM();
+
+            Container.BindInterfacesAndSelfTo<Tile>().FromComponentInNewPrefab(tilePrototype).AsSingle();
+            Container.BindInterfacesAndSelfTo<Crystal>().FromComponentInNewPrefab(crystalPrototype).AsSingle();
+
+            //Container.BindInterfacesAndSelfTo<PoolOfCrystals>().AsSingle();
+            //Container.BindInterfacesAndSelfTo<PoolOfTiles>().AsSingle();
+
         }
 
         private void InstallGameCoreFSM()

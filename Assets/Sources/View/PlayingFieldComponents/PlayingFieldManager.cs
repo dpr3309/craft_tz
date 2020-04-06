@@ -12,19 +12,13 @@ using Zenject;
 
 namespace Craft_TZ.View
 {
+
     internal class PlayingFieldManager : MonoBehaviour, IGameCore
     {
-        [SerializeField]
-        private Tile tilePrototype = null;
-        [SerializeField]
-        private Crystal crystalPrototype = null;
         [SerializeField]
         private Text countText = null;
 
         private int counter;
-
-        private ObjectPool<Tile> poolOfTiles;
-        private ObjectPool<Crystal> poolOfCrystals;
 
         private List<Tile> tileInstances = new List<Tile>();
         private List<Crystal> crystalInstances = new List<Crystal>();
@@ -34,12 +28,13 @@ namespace Craft_TZ.View
         private ICrystalPositionGenerator crystalPositionGenerator;
         private IGameCoreStateMachine gameCoreStateMachine;
 
-        public DifficultyLevel difficultyLevel;
+        private PoolOfTiles poolOfTiles;
+        private PoolOfCrystals poolOfCrystals;
 
         private bool isConstructed = false;
 
         [Inject]
-        private void Construct(ICrystalPositionGenerator crystalPositionGenerator, ITilePositionGenerator positionGenerator, IMainCoordinateProcessor mainCoordinateProcessor, IGameCoreStateMachine gameCoreStateMachine)
+        private void Construct(ICrystalPositionGenerator crystalPositionGenerator, ITilePositionGenerator positionGenerator, IMainCoordinateProcessor mainCoordinateProcessor, IGameCoreStateMachine gameCoreStateMachine, PoolOfTiles poolOfTiles, PoolOfCrystals poolOfCrystals)
         {
             if (isConstructed)
                 throw new System.Exception($"[{GetType().Name}.Construct] object already constructed");
@@ -49,13 +44,14 @@ namespace Craft_TZ.View
             this.mainCoordinateProcessor = mainCoordinateProcessor;
             this.positionGenerator = positionGenerator;
             this.gameCoreStateMachine = gameCoreStateMachine;
+            this.poolOfTiles = poolOfTiles;
+            this.poolOfCrystals = poolOfCrystals;
+        
             isConstructed = true;
         }
 
         private void Start()
         {
-            poolOfTiles = new ObjectPool<Tile>(() => tilePrototype.Clone(false), 100);
-            poolOfCrystals = new ObjectPool<Crystal>(() => crystalPrototype.Clone(false), 10);
             gameCoreStateMachine.Event(GameCoreEvents.Startup);
         }
 
