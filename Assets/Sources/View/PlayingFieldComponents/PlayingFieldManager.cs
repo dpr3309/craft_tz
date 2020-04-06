@@ -4,7 +4,6 @@ using Craft_TZ.GameCore.FSM;
 using Craft_TZ.Model;
 using Craft_TZ.Model.CoordinateHandlers;
 using Craft_TZ.Model.Crystal;
-using Craft_TZ.Shared;
 using Craft_TZ.Shared.Calculations;
 using UnityEngine;
 using UnityEngine.UI;

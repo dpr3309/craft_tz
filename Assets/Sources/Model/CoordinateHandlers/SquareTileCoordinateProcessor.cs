@@ -5,11 +5,11 @@ namespace Craft_TZ.Model.CoordinateHandlers
 {
     internal sealed class SquareTileCoordinateProcessor : ITileCoordinateProcessor
     {
-        private readonly int tileSize;
+        private readonly float tileSize;
         private readonly float halfTileSize;
         private readonly double tileArea;
 
-        public SquareTileCoordinateProcessor(int tileSize)
+        public SquareTileCoordinateProcessor(float tileSize)
         {
             this.tileSize = tileSize;
             halfTileSize = tileSize / 2f;

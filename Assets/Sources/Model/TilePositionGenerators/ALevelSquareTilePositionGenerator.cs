@@ -7,14 +7,14 @@ namespace Craft_TZ.Model.SquareTile
 {
     internal abstract class ALevelSquareTilePositionGenerator
     {
-        private readonly int tileSize;
+        private readonly float tileSize;
 
         protected abstract Vector2Int[] TopFaceCellIndices { get; }
         protected abstract Vector2Int[] RightFaceCellIndices { get; }
 
         protected abstract Vector2Int GeneratedAreaSize { get; }
 
-        protected ALevelSquareTilePositionGenerator(int tileSize)
+        protected ALevelSquareTilePositionGenerator(float tileSize)
         {
             this.tileSize = tileSize;
         }

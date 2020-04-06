@@ -11,10 +11,10 @@ namespace Craft_TZ.Model.SquareTile
 
         private readonly Vector2Int launchPadSize;
         private readonly DifficultyLevel difficultyLevel;
-        private readonly int tileSize;
+        private readonly float tileSize;
         private readonly ALevelSquareTilePositionGenerator tilePositionGenerator;
 
-        public SquareTilePositionGenerator(int tileSize, DifficultyLevel difficultyLevel, Vector2Int launchPadSize)
+        public SquareTilePositionGenerator(float tileSize, DifficultyLevel difficultyLevel, Vector2Int launchPadSize)
         {
             this.difficultyLevel = difficultyLevel;
             this.tileSize = tileSize;
@@ -29,7 +29,7 @@ namespace Craft_TZ.Model.SquareTile
         /// <returns>The tile position generator.</returns>
         /// <param name="currentDifficultyLevel">Current difficulty level.</param>
         /// <param name="currentTileSize">Current tile size.</param>
-        private ALevelSquareTilePositionGenerator GenerateTilePositionGenerator(DifficultyLevel currentDifficultyLevel, int currentTileSize)
+        private ALevelSquareTilePositionGenerator GenerateTilePositionGenerator(DifficultyLevel currentDifficultyLevel, float currentTileSize)
         {
             switch (currentDifficultyLevel)
             {

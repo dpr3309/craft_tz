@@ -13,7 +13,7 @@ namespace Craft_TZ.Model.SquareTile
         private readonly Vector2Int generatedAreaSize = new Vector2Int(1, 1);
         protected override Vector2Int GeneratedAreaSize => generatedAreaSize;
 
-        public HighLevelSquareTilePositionGenerator(int tileSize)
+        public HighLevelSquareTilePositionGenerator(float tileSize)
             : base(tileSize)
         {
         }

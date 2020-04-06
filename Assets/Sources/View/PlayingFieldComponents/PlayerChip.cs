@@ -1,5 +1,6 @@
 ﻿using System;
 using Craft_TZ.Model.CoordinateModifiers;
+using Craft_TZ.Model.Enums;
 using UnityEngine;
 using Zenject;
 
@@ -9,6 +10,13 @@ namespace Craft_TZ.View
     {
         [SerializeField]
         private float speed;
+
+        [SerializeField]
+        private float radius;
+
+        public float Radius => radius;
+
+        public PlayerChipType ChipType => PlayerChipType.Circle;
 
         private PlayingFieldManager gameLoopManager;
 

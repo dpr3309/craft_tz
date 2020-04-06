@@ -4,6 +4,7 @@ using System.Linq;
 using Craft_TZ.Model.CoordinateHandlers;
 using Craft_TZ.Model.CoordinateModifiers;
 using Craft_TZ.Model.Crystal;
+using Craft_TZ.Model.Enums;
 using Craft_TZ.Model.SquareTile;
 using Craft_TZ.Shared;
 using UnityEngine;
@@ -13,32 +14,37 @@ namespace Craft_TZ.Model.Installers
 {
     internal class ModelInstaller : MonoInstaller
     {
-        [SerializeField]
-        private GameSettings settings;
+        public Vector2Int launchPadSize;
+        public List<CoordinateModifierTypes> coordinateModifierTypes;
+        public DifficultyLevel difficaltyLevel;
+        public CrystalPositionGeneratorType crystalPositionGeneratorType;
 
-        
+        [Inject]
+        private GameSettings settings = null;
+
 
         public override void InstallBindings()
         {
-            Debug.Log(this.GetType().Name);
 
-            InstallCrystalPositionGenerator(settings.crystalPositionGeneratorType);
+            Debug.Log(GetType().Name);
+
+            InstallCrystalPositionGenerator(crystalPositionGeneratorType);
 
             // 1 - с учетом выбранного типа тайлов, инстанцировать прототип тайла
             // 2 с учетом типа тайлов, и с учетом размера инстанцированного тала, инстанцировать генератор позиций тайлов
-            InstallTilePositionGenerator(settings.tileType, settings.tileSize, settings.difficaltyLevel, settings.launchPadSize);
+            InstallTilePositionGenerator(settings.TileType, settings.TileSize, difficaltyLevel, launchPadSize);
             // 3 с учетом типа тайла и его размеров, инстанцировать процессор координат тайлов (для проверки, находится ли фишки игрока, в пределах инстанированных тайлов, или нет)
-            InstallTileCoordinateProcessor(settings.tileType, settings.tileSize);
+            InstallTileCoordinateProcessor(settings.TileType, settings.TileSize);
 
 
             // 4 - с учетом выбранного типа фишки игрока - инстанцировать фишку игрока
             // 5  с учетом выбранного типа фишки игрока и ее размера, инстанцировать процессор координат позиции фишки игрока
-            InstallPlayerChipCoordinateProcessor(settings.playerChipType, settings.playerChipRadius);
+            InstallPlayerChipCoordinateProcessor(settings.PlayerChipType, settings.PlayerChipRadius);
 
 
             Container.BindInterfacesAndSelfTo<MainCoordinateProcessor>().AsSingle();
 
-            InstallCoordinateModifierManager(settings.coordinateModifierTypes);
+            InstallCoordinateModifierManager(coordinateModifierTypes);
 
         }
 
@@ -70,19 +76,19 @@ namespace Craft_TZ.Model.Installers
             Container.BindInterfacesTo<MainCoordinateModifierManager>().AsSingle().WithArguments(coordinateModifiers.ToArray());
         }
 
-        private void InstallPlayerChipCoordinateProcessor(PlayerChipType playerChipType, int playerChipRadius)
+        private void InstallPlayerChipCoordinateProcessor(PlayerChipType playerChipType, float playerChipRadius)
         {
             switch (playerChipType)
             {
                 case PlayerChipType.Circle:
-                    Container.BindInterfacesTo<PlayerBallCoordinateProcessor>().AsSingle().WithArguments<float>(playerChipRadius);
+                    Container.BindInterfacesTo<PlayerBallCoordinateProcessor>().AsSingle().WithArguments(playerChipRadius);
                     break;
                 default:
                     throw new Exception($"[ModelInstaller.InstallPlayerChipCoordinateProcessor] unhandled TileType : {playerChipType}");
             }
         }
 
-        private void InstallTileCoordinateProcessor(TileType tileType, int tileSize)
+        private void InstallTileCoordinateProcessor(TileType tileType, float tileSize)
         {
             switch (tileType)
             {
@@ -94,7 +100,7 @@ namespace Craft_TZ.Model.Installers
             }
         }
 
-        private void InstallTilePositionGenerator(TileType tileType, int tileSize, DifficultyLevel difficultyLevel, Vector2Int launchPadSize)
+        private void InstallTilePositionGenerator(TileType tileType, float tileSize, DifficultyLevel difficultyLevel, Vector2Int launchPadSize)
         {
             if (tileSize <= 0)
                 throw new Exception($"[ModelInstaller.InstallTilePositionGenerator] tile size <= 0");
@@ -126,43 +132,5 @@ namespace Craft_TZ.Model.Installers
                     throw new Exception($"[ModelInstaller.InstallCrystalPositionGenerator] unhandled CrystalPositionGeneratorType : {type}");
             }
         }
-    }
-
-    [System.Serializable]
-    public class GameSettings
-    {
-        public Vector2Int launchPadSize;
-        public PlayerChipType playerChipType;
-        public float playerChipSpeed;
-        public TileType tileType;
-        public CrystalPositionGeneratorType crystalPositionGeneratorType;
-
-        public int tileSize;
-        public int playerChipRadius;
-        public DifficultyLevel difficaltyLevel;
-        public List<CoordinateModifierTypes> coordinateModifierTypes;
-    }
-
-    public enum TileType
-    {
-        Square,
-    }
-
-    public enum PlayerChipType
-    {
-        Circle,
-    }
-
-    public enum CrystalPositionGeneratorType
-    {
-        Random,
-        InOrder
-    }
-
-    public enum CoordinateModifierTypes
-    {
-        Forward,
-        Right,
-        Left
     }
 }

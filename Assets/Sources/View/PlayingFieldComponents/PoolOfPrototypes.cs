@@ -16,8 +16,6 @@ namespace Craft_TZ.View
         [Inject]
         private void Construct(T prototype)
         {
-            Debug.LogWarning($"----=={GetType().Name}==---- Construct  {typeof(T).GetType().Name}");
-
             if (isConstructed)
                 throw new System.Exception($"[{GetType().Name}.Construct] object already constructed");
 
