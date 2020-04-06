@@ -291,6 +291,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countText: {fileID: 103859628}
+  offset: -3
+  minTilesCount: 100
   center: {x: 0, y: 0}
   other: {x: 0, y: 0}
   radius: 0
@@ -687,7 +689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launchPadSize: {x: 3, y: 3}
   coordinateModifierTypes: 0000000001000000
-  difficaltyLevel: 2
+  difficaltyLevel: 0
   crystalPositionGeneratorType: 1
 --- !u!114 &1778892520
 MonoBehaviour:

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Craft_TZ.GameCore.FSM;
 using Craft_TZ.Model;
@@ -16,6 +17,12 @@ namespace Craft_TZ.View
     {
         [SerializeField]
         private Text countText = null;
+
+        [SerializeField]
+        private float offset;
+
+        [SerializeField]
+        private int minTilesCount;
 
         private int counter;
 
@@ -45,7 +52,7 @@ namespace Craft_TZ.View
             this.gameCoreStateMachine = gameCoreStateMachine;
             this.poolOfTiles = poolOfTiles;
             this.poolOfCrystals = poolOfCrystals;
-        
+
             isConstructed = true;
         }
 
@@ -59,11 +66,7 @@ namespace Craft_TZ.View
             var tilesPositions = positionGenerator.GenerateLaunchPadPositions().ToList().AsReadOnly();
             GenerateTilesInPositions(tilesPositions);
 
-
-            for (int i = 0; i < 50; i++)
-            {
-                HandleStepGeneration();
-            }
+            CheckTilesCount();
         }
 
         /// <summary>
@@ -125,11 +128,24 @@ namespace Craft_TZ.View
             gameCoreStateMachine.Event(GameCoreEvents.Restart);
         }
 
+        private void CheckTilesCount()
+        {
+            if (tileInstances.Count < minTilesCount)
+            {
+                HandleStepGeneration();
+                CheckTilesCount();
+            }
+        }
+
         public void Step(Vector2 playerChipCoordinates)
         {
             //todo: проверить, стоит ли фишка чувака на полу
             if (mainCoordinateProcessor.CoordinatesAreWithinTiles(playerChipCoordinates, tileInstances.Select(i => i.Position)))
             {
+                ReleaseTraversedObjects(playerChipCoordinates);
+
+                CheckTilesCount();
+
                 List<AbstractCrystal> toRemove = new List<AbstractCrystal>();
 
                 // если да: 
@@ -164,6 +180,32 @@ namespace Craft_TZ.View
             }
         }
 
+        private void ReleaseTraversedObjects(Vector2 playerChipCoordinates)
+        {
+            var traversedTiles = SelectTraversedObject(tileInstances, playerChipCoordinates);
+            ReleaseObjects(traversedTiles, tileInstances, poolOfTiles);
+
+            var transferedCrystals = SelectTraversedObject(crystalInstances, playerChipCoordinates);
+            ReleaseObjects(transferedCrystals, crystalInstances, poolOfCrystals);
+        }
+
+        private List<T> SelectTraversedObject<T>(List<T> instances, Vector2 playerChipCoordinates)
+            where T : Component
+        {
+            return instances.Where(i => i.transform.position.x < playerChipCoordinates.x + offset || i.transform.position.z < playerChipCoordinates.y + offset).ToList();
+        }
+
+        private void ReleaseObjects<T>(List<T> itemsToFreed, List<T> instances, PoolOfPrototypes<T> pool)
+            where T : Component
+        {
+            for (int i = 0; i < itemsToFreed.Count; i++)
+            {
+                itemsToFreed[i].gameObject.SetActive(false);
+                pool.PutObject(itemsToFreed[i]);
+                instances.Remove(itemsToFreed[i]);
+            }
+        }
+
         public Vector2 center, other;
         public float radius;
 
@@ -187,9 +229,5 @@ namespace Craft_TZ.View
                 Debug.Log(GeometricCalculator.CircleContainsPoint(center, other, radius));
             }
         }
-
-        
-
-        
     }
 }
