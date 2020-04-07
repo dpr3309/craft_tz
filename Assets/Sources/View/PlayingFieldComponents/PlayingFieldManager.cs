@@ -38,13 +38,14 @@ namespace Craft_TZ.View
 
         private bool isConstructed = false;
 
+        public int Score => counter;
+
         [Inject]
         private void Construct(ICrystalPositionGenerator crystalPositionGenerator, ITilePositionGenerator positionGenerator, IMainCoordinateProcessor mainCoordinateProcessor, IGameCoreStateMachine gameCoreStateMachine, PoolOfTiles poolOfTiles, PoolOfCrystals poolOfCrystals)
         {
             if (isConstructed)
                 throw new System.Exception($"[{GetType().Name}.Construct] object already constructed");
 
-            Debug.Log("PlayingFieldManager.Construct");
             this.crystalPositionGenerator = crystalPositionGenerator;
             this.mainCoordinateProcessor = mainCoordinateProcessor;
             this.positionGenerator = positionGenerator;
@@ -138,7 +139,6 @@ namespace Craft_TZ.View
 
         public void Step(Vector2 playerChipCoordinates)
         {
-            //todo: проверить, стоит ли фишка чувака на полу
             if (mainCoordinateProcessor.CoordinatesAreWithinTiles(playerChipCoordinates, tileInstances.Select(i => i.Position)))
             {
                 ReleaseTraversedObjects(playerChipCoordinates);
@@ -147,14 +147,10 @@ namespace Craft_TZ.View
 
                 List<AbstractCrystal> toRemove = new List<AbstractCrystal>();
 
-                // если да: 
-                // потом, проверить коллизию с кристалами
                 foreach (var crystalInstance in crystalInstances)
                 {
                     if (mainCoordinateProcessor.PlayerChipCollisionWithOtherObject(playerChipCoordinates, crystalInstance.Position))
                     {
-                        // механика подбора кристала
-                        // увеличить счетчик очков, переместить кристал в коллекцию на удаление
                         counter++;
                         countText.text = counter.ToString();
                         toRemove.Add(crystalInstance);
@@ -214,28 +210,9 @@ namespace Craft_TZ.View
             }
         }
 
-        public Vector2 center, other;
-        public float radius;
-
-        public bool T1, T2, T3;
-        private void Update()
+        public void HandleInputClick()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                gameCoreStateMachine.Event(GameCoreEvents.Click);
-            }
-
-            if (T1)
-            {
-                T1 = !T1;
-                HandleStepGeneration();
-                return;
-            }
-            if (T2)
-            {
-                T2 = !T2;
-                Debug.Log(GeometricCalculator.CircleContainsPoint(center, other, radius));
-            }
+            gameCoreStateMachine.Event(GameCoreEvents.Click);
         }
     }
 }
