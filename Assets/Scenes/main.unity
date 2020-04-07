@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countText: {fileID: 103859628}
-  offset: 2.5
+  offset: -2.5
   minTilesCount: 100
 --- !u!4 &176905223
 Transform:

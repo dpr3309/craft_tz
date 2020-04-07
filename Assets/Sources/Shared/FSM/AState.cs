@@ -1,5 +1,8 @@
-﻿using System;
+﻿//#define LOG_STATE_INFO
+
+using System;
 using UnityEngine;
+
 
 namespace Craft_TZ.Shared.FSM
 {
@@ -12,7 +15,9 @@ namespace Craft_TZ.Shared.FSM
 
         protected virtual void LogStateName()
         {
+#if(LOG_STATE_INFO)
             Debug.Log($"---S_FMS----{GetType().Name}---S_FMS---");
+#endif
         }
 
         public virtual void OnExit() { }
