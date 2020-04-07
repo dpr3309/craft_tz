@@ -8,7 +8,7 @@ namespace Craft_TZ.View
         public override Vector2 Position { get; protected set; }
 
         [SerializeField]
-        private float tileSize;
+        private float tileSize = 1;
         public override float TileSize => tileSize;
 
         public override TileType TileType => TileType.Square;

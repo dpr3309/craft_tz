@@ -9,10 +9,10 @@ namespace Craft_TZ.View
     internal class PlayerChip : MonoBehaviour, IPlayerChip
     {
         [SerializeField]
-        private float speed;
+        private float speed = 1;
 
         [SerializeField]
-        private float radius;
+        private float radius = 1;
 
         public float Radius => radius;
 

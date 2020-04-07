@@ -14,10 +14,14 @@ namespace Craft_TZ.Model.Installers
 {
     internal class ModelInstaller : MonoInstaller
     {
-        public Vector2Int launchPadSize;
-        public List<CoordinateModifierTypes> coordinateModifierTypes;
-        public DifficultyLevel difficaltyLevel;
-        public CrystalPositionGeneratorType crystalPositionGeneratorType;
+        [SerializeField]
+        private Vector2Int launchPadSize = Vector2Int.one;
+        [SerializeField]
+        private List<CoordinateModifierTypes> coordinateModifierTypes = null;
+        [SerializeField]
+        private DifficultyLevel difficaltyLevel = (DifficultyLevel)(-1);
+        [SerializeField]
+        private CrystalPositionGeneratorType crystalPositionGeneratorType = (CrystalPositionGeneratorType)(-1);
 
         [Inject]
         private GameSettings settings = null;
@@ -50,7 +54,7 @@ namespace Craft_TZ.Model.Installers
 
         private void InstallCoordinateModifierManager(List<CoordinateModifierTypes> coordinateModifierTypes)
         {
-            if(coordinateModifierTypes.Count ==0)
+            if (coordinateModifierTypes.Count == 0)
                 throw new Exception("[ModelInstaller.InstallCoordinateModifierManager] settings.coordinateModifierTypes.Count ==0");
 
             //проверка на наличие повторяющихся элементов в коллекци
@@ -105,7 +109,7 @@ namespace Craft_TZ.Model.Installers
             if (tileSize <= 0)
                 throw new Exception($"[ModelInstaller.InstallTilePositionGenerator] tile size <= 0");
 
-            if(launchPadSize.x <=0 || launchPadSize.y <=0)
+            if (launchPadSize.x <= 0 || launchPadSize.y <= 0)
                 throw new Exception($"[ModelInstaller.InstallTilePositionGenerator] incorrect launch pad dimensions");
 
             switch (tileType)

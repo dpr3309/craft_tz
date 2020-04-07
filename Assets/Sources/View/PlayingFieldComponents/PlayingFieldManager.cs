@@ -11,19 +11,16 @@ using Zenject;
 
 namespace Craft_TZ.View
 {
-
     internal class PlayingFieldManager : MonoBehaviour, IGameCore
     {
         [SerializeField]
         private Text countText = null;
 
         [SerializeField]
-        private float offset;
+        private float offset = 0;
 
         [SerializeField]
-        private int minTilesCount;
-
-        private int counter;
+        private int minTilesCount = 1;
 
         private List<AbstractTile> tileInstances = new List<AbstractTile>();
         private List<AbstractCrystal> crystalInstances = new List<AbstractCrystal>();
@@ -38,7 +35,7 @@ namespace Craft_TZ.View
 
         private bool isConstructed = false;
 
-        public int Score => counter;
+        public int Score { get; private set; }
 
         [Inject]
         private void Construct(ICrystalPositionGenerator crystalPositionGenerator, ITilePositionGenerator positionGenerator, IMainCoordinateProcessor mainCoordinateProcessor, IGameCoreStateMachine gameCoreStateMachine, PoolOfTiles poolOfTiles, PoolOfCrystals poolOfCrystals)
@@ -123,8 +120,8 @@ namespace Craft_TZ.View
             }
             tileInstances.Clear();
 
-            counter = 0;
-            countText.text = counter.ToString();
+            Score = 0;
+            countText.text = Score.ToString();
             gameCoreStateMachine.Event(GameCoreEvents.Restart);
         }
 
@@ -151,8 +148,8 @@ namespace Craft_TZ.View
                 {
                     if (mainCoordinateProcessor.PlayerChipCollisionWithOtherObject(playerChipCoordinates, crystalInstance.Position))
                     {
-                        counter++;
-                        countText.text = counter.ToString();
+                        Score++;
+                        countText.text = Score.ToString();
                         toRemove.Add(crystalInstance);
                     }
                 }
