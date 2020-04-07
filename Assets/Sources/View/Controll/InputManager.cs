@@ -22,13 +22,5 @@ namespace Craft_TZ.View
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => gameCore.HandleInputClick());
         }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                gameCore.HandleInputClick();
-            }
-        }
     }
 }
