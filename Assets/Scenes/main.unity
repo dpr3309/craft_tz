@@ -313,8 +313,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 176905223}
-  - component: {fileID: 176905222}
   - component: {fileID: 176905224}
+  - component: {fileID: 176905222}
   m_Layer: 0
   m_Name: FieldManager
   m_TagString: Untagged
@@ -331,11 +331,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 176905221}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4490be53fcc7a47228c665d386b434b2, type: 3}
+  m_Script: {fileID: 11500000, guid: ff4092e0654fa4222910fea70c34237a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   countText: {fileID: 103859628}
-  offset: -3
+  offset: 2.5
   minTilesCount: 100
 --- !u!4 &176905223
 Transform:

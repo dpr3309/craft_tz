@@ -11,7 +11,7 @@ using Zenject;
 
 namespace Craft_TZ.View
 {
-    internal class PlayingFieldManager : MonoBehaviour, IGameCore
+    internal class GameCore : MonoBehaviour, IGameCore
     {
         [SerializeField]
         private Text countText = null;

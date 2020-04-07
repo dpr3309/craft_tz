@@ -18,7 +18,7 @@ namespace Craft_TZ.View
 
         public PlayerChipType ChipType => PlayerChipType.Circle;
 
-        private PlayingFieldManager gameLoopManager;
+        private GameCore gameLoopManager;
 
         private bool isConstructed = false;
 
@@ -29,7 +29,7 @@ namespace Craft_TZ.View
         private Action moveAction;
 
         [Inject]
-        private void Construct(ICoordinateModifierManager coordinateModifierManager, PlayingFieldManager gameLoopManager)
+        private void Construct(ICoordinateModifierManager coordinateModifierManager, GameCore gameLoopManager)
         {
             if (isConstructed)
                 throw new Exception($"[{GetType().Name}.Construct] object already constructed");
