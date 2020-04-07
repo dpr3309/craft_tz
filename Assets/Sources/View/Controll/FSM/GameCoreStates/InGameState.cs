@@ -7,15 +7,18 @@ namespace Craft_TZ.GameCore.FSM
     internal class InGameState : AState, IInGameState
     {
         private readonly IPlayerChip playerChip;
+        private readonly IInfoManager infoManager;
 
-        public InGameState(IPlayerChip playerChip)
+        public InGameState(IPlayerChip playerChip, IInfoManager infoManager)
         {
             this.playerChip = playerChip;
+            this.infoManager = infoManager;
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
+            infoManager.ClearMessage();
             playerChip.StartMove();
         }
 
@@ -26,9 +29,9 @@ namespace Craft_TZ.GameCore.FSM
                 playerChip.ChangeDirection();
             }
 
-            if (args.Id == GameCoreEvents.EndOfGame.Id)
+            if (args.Id == GameCoreEvents.LostGame.Id)
             {
-                return typeof(EndOfGameState);
+                return typeof(LostGameState);
             }
             return base.Event(args);
         }

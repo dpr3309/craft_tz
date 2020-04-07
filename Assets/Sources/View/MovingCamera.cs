@@ -6,9 +6,9 @@ namespace Craft_TZ.View
     public class MovingCamera : MonoBehaviour
     {
         [SerializeField]
-        private Vector3 offset;
-        [SerializeField]
         private float smooth = 0.5f;
+
+        private Vector3 offset;
 
         private Transform playerChipTransform = null;
 
@@ -25,7 +25,8 @@ namespace Craft_TZ.View
 
         private void LateUpdate()
         {
-            transform.position = Vector3.Lerp(transform.position, playerChipTransform.position + offset, smooth);
+            var newPosition = Vector3.Lerp(transform.position, new Vector3(playerChipTransform.position.x, 0, playerChipTransform.position.z) + offset, smooth);
+            transform.position = newPosition;
         }
     }
 }

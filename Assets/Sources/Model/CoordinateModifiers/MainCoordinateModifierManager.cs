@@ -34,5 +34,10 @@ namespace Craft_TZ.Model.CoordinateModifiers
         {
             return currentCoordinateModifier.TransformCoordinates(coordinate, modifier);
         }
+
+        public Vector3 TransformCoordinatesFall(Vector3 coordinate, float modifier)
+        {
+            return currentCoordinateModifier.TransformCoordinatesFall(coordinate, modifier);
+        }
     }
 }

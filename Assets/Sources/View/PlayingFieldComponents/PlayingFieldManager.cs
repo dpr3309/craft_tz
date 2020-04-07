@@ -1,11 +1,10 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Craft_TZ.GameCore.FSM;
 using Craft_TZ.Model;
 using Craft_TZ.Model.CoordinateHandlers;
 using Craft_TZ.Model.Crystal;
-using Craft_TZ.Shared.Calculations;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -173,11 +172,20 @@ namespace Craft_TZ.View
             }
             else
             {
-                //todo: фишка игрока должна упасть, перевести игру с состояние конец игры
-                Debug.LogWarning("ПАДАЕМ!!!!!");
-
-                gameCoreStateMachine.Event(GameCoreEvents.EndOfGame);
+                gameCoreStateMachine.Event(GameCoreEvents.LostGame);
             }
+        }
+
+        public void WaitLost()
+        {
+            StartCoroutine(WaitLostCoroutine());
+        }
+
+        private IEnumerator WaitLostCoroutine()
+        {
+            yield return new WaitForSeconds(1f);
+            gameCoreStateMachine.Event(GameCoreEvents.EndOfGame);
+            yield break;
         }
 
         private void ReleaseTraversedObjects(Vector2 playerChipCoordinates)

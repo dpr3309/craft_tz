@@ -35,6 +35,7 @@ namespace Craft_TZ.View.Installers
             Container.BindInterfacesTo<EndOfGameState>().AsSingle();
             Container.BindInterfacesTo<ReleaseState>().AsSingle();
             Container.BindInterfacesTo<GameCoreStateMachine>().AsSingle();
+            Container.BindInterfacesTo<LostGameState>().AsSingle();
         }
     }
 }

@@ -7,9 +7,11 @@ namespace Craft_TZ.GameCore.FSM
     internal class ReadyToStartState : AState, IReadyToStartState
     {
         private readonly IGameCore gameCore;
+        private readonly IInfoManager infoManager;
 
-        public ReadyToStartState(IGameCore gameCore)
+        public ReadyToStartState(IGameCore gameCore, IInfoManager infoManager)
         {
+            this.infoManager = infoManager;
             this.gameCore = gameCore;
         }
 
@@ -17,6 +19,7 @@ namespace Craft_TZ.GameCore.FSM
         {
             base.OnEnter();
             gameCore.Startup();
+            infoManager.StartMessage();
         }
 
         public override Type Event(Shared.FSM.EventArgs args)

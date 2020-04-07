@@ -6,5 +6,6 @@
         void StopMove();
         void ChangeDirection();
         void Restart();
+        void StartFall();
     }
 }

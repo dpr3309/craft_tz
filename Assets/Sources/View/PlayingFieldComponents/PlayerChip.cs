@@ -58,6 +58,14 @@ namespace Craft_TZ.View
             };
         }
 
+        public void StartFall()
+        {
+            moveAction = () =>
+            {
+                transform.position = coordinateModifierManager.TransformCoordinatesFall(transform.position, speed);
+            };
+        }
+
         public void StopMove()
         {
             moveAction = null;
